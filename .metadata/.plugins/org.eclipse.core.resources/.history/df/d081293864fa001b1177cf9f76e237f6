@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>Mask8</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div>
+            <h3>USER</h3>
+            {{user}}<br>
+            <h3>보드:5</h3>
+            {{board}}<br>
+            <div>
+                <h3>댓글입력</h3>
+                <textarea id="comment_box" name="comment_box" rows="3" cols="33" v-model="commentFrm.commentContent" required="required"></textarea>
+                <button @click="insertComment" method="post">댓글등록</button>
+            </div>
+
+            <h3>댓글</h3>
+            <div v-for="c in comments">
+                {{c.commentIdx}} &nbsp;&nbsp; {{c.userVO.userNickname}} &nbsp;&nbsp; {{c.commentContent}} &nbsp;&nbsp; {{c.uploadDate}} &nbsp;&nbsp; {{c.commentLike}}
+                <button @click="checkComment(c.commentIdx)">수정</button>
+                <button @click="deleteComment(c.commentIdx)">삭제</button>
+                <button @click="checkComment(c.commentIdx)">대댓글</button><br>
+                <div v-if="commentToggle && commentIdxTemp==c.commentIdx">
+                    <h3>댓글수정</h3>
+                    <textarea id="comment_box" name="comment_box" rows="3" cols="33" v-model="updateCommentFrm.commentContent" required="required"></textarea>
+                    <button @click="updateComment(c.commentIdx)">댓글등록</button>
+                </div>
+
+                <div v-for="s in subComments" v-if="c.commentIdx==s.commentIdx">
+                    ㄴ {{s.userVO.userNickname}} : {{s.subCommentContent}} {{s.uploadDate}}
+                    <button>수정</button>
+                    <button @click="deleteSubComment(s.subCommentIdx)">삭제</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var boardIdx = 5;
+
+		//댓글 최신화
+                async function refresh(){
+                	try {
+    				const response = await axios.get('http://127.0.0.1:7788/api/selectAllComments/' + boardIdx);
+    				console.log(response);
+  					} catch (error) {
+    				console.error(error);
+  					}
+                }
+
+        var app = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    user: {}, // 로그인된 유저정보
+                    board: {}, // 받아온 보드
+                    comments: [], // 받아온 댓글
+                    subComments: [], // 받아온 대댓글
+                    loading: true,
+                    errored: false,
+                    commentFrm: {}, // insert 댓글 폼
+                    updateCommentFrm: {}, // update 댓글 폼
+                    subCommentFrm: {}, // insert 대댓글 폼
+                    updateSubCommentFrm: {}, // update 대댓글 폼
+                    commentIdxTemp: '', // commentIdx확인용 - 수정하려는 index비교
+                    subCommentIdxTemp: '', // subCommentIdx확인용 - 수정하려는 index비교
+                    commentToggle: false, // comment 수정폼이 나타나는 토글
+                    subCommentToggle: false // subComment 수정폼이 나타나는 토글
+                }
+            },
+            methods: {
+                // 댓글 작성하기
+                insertComment() {
+                    this.commentFrm.userIdx = this.user.userIdx
+                    this.commentFrm.boardIdx = boardIdx
+                    axios
+                        .post('http://127.0.0.1:7788/api/insertComment', this.commentFrm)
+                        .then(response => refresh())
+                        .catch(error => {
+                            console.log(error);
+                            this.errored = true
+                        })
+                },
+
+                // 댓글 삭제
+                deleteComment(commentIdx) {
+                    axios
+                        .put('http://127.0.0.1:7788/api/deleteComment/' + commentIdx)
+                        .then(response => (location.replace('./board_detail.html')))
+                        .catch(error => {
+                            console.log(error);
+                            this.errored = true
+                        })
+                },
+
+                // 수정 버튼 토글
+                checkComment(commentIdx) {
+                    this.commentIdxTemp = commentIdx
+                    if (this.commentToggle) this.commentToggle = false;
+                    else this.commentToggle = true;
+                },
+
+                // 댓글 수정
+                updateComment(commentIdx) {
+                    this.updateCommentFrm.commentIdx = commentIdx
+                    axios
+                        .put('http://127.0.0.1:7788/api/updateComment', this.updateCommentFrm)
+                        .then(response => (location.replace('./board_detail.html')))
+                        .catch(error => {
+                            console.log(error);
+                            this.errored = true
+                        })
+                },
+                
+            },
+            mounted() {
+                var loadingCnt = 0;
+                //var boardIdx = boardIdx;
+
+
+                // alert(commentIdx);
+
+                // user 불러오기 (해당html은 json으로 대체)
+                axios
+                    .get('./userVO.json')
+                    .then(response => (this.user = response.data))
+                    .catch(error => {
+                        console.log(error);
+                        this.errored = true; //여기서 error값 변경
+                    })
+                    .finally(() => this.loading = false) //여기서 loading이 끝났음을 알려준다.
+
+
+                // selectBoardById 
+                axios
+                    .get('http://127.0.0.1:7788/board/selectboardbyid/' + boardIdx)
+                    .then(response => (this.board = response.data))
+                    .catch(error => {
+                        console.log(error);
+                        this.errored = true
+                    })
+                    .finally(() => {
+                        loadingCnt += 1;
+                        if (loadingCnt == 3) this.loading = false;
+                    })
+
+                // selectAllComments
+                axios
+                    .get('http://127.0.0.1:7788/api/selectallcomments/' + boardIdx)
+                    .then(response => (this.comments = response.data))
+                    .catch(error => {
+                        console.log(error);
+                        this.errored = true
+                    })
+                    .finally(() => {
+                        loadingCnt += 1;
+                        if (loadingCnt == 3) this.loading = false;
+                    })
+
+                // selectAllSubComments
+                axios
+                    .get('http://127.0.0.1:7788/api/selectAllSubComments/' + boardIdx)
+                    .then(response => (this.subComments = response.data))
+                    .catch(error => {
+                        console.log(error);
+                        this.errored = true
+                    })
+                    .finally(() => {
+                        loadingCnt += 1;
+                        if (loadingCnt == 3) this.loading = false;
+                    })
+            }
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,4 @@
+#Tomcat publish data
+#Wed Aug 11 14:23:15 KST 2021
+org.eclipse.jst.jee.server\:Test_HTML=C\:\\encore_bjy\\apache-tomcat-8.5.64\\wtpwebapps\\Test_HTML
+org.eclipse.jst.jee.server\:00_team_vue_Test=C\:\\encore_bjy\\apache-tomcat-8.5.64\\wtpwebapps\\00_team_vue_Test

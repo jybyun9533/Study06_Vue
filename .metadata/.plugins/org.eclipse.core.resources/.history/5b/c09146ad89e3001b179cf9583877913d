@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+	#second>h2 {margin: auto; text-align: center; color: blue;}
+	#tid{border: 1px blue; margin: auto; text-align: center; border-collapse: collapse;}
+	td{ border: 1px solid green;}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!-- Vue Axios cdn -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+</head>
+<body>
+	<div id="second">
+		<h2>ENCORE SAFE FOOD</h2>
+	</div>
+	
+	<div id="app">
+		<section v-if="errored">
+			<p>Error In Axios Transport</p>
+		</section>
+		<section v-else>
+		<div v-if="loading">Loading..</div>
+		<ul>
+			<li>
+			
+			</li>
+		</ul>
+		</section>
+	</div>
+	<script>
+		new Vue({
+			el : '#app',
+			// data:{} 정적인 데이터를 바인딩 할때 사용
+			// data(){} 동적인, 반응형 데이터를 바인딩 할 때 사용하는 기법
+			
+			data(){
+				return{
+					info:null,
+					errored:false,
+					loading:true
+				}
+			},
+			// axios 기술.. mounted()에서 해줘야 함
+			mounted(){
+				axios
+					.get('./flags.json')
+					.then(response=>(this.info=response.data))
+					.catch(error =>{
+						console.log(error);
+						this.errored=true; //여기서 error 값 변경
+					})
+					.finally(()=> this.loading=false)
+			}
+			
+		});
+		
+	</script>
+</body>
+</html>

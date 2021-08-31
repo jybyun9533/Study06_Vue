@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;team_vue_Test&apos; to &apos;00_team_vue_Test&apos;" description="Rename resource &apos;team_vue_Test&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="/team_vue_Test" name="00_team_vue_Test" stamp="1627628635720" updateReferences="true"/>
+</session>

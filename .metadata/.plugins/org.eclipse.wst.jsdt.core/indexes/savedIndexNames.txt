@@ -1,0 +1,16 @@
+INDEX VERSION 1.4+C:\encore_bjy\eclipse\05_vueWorkspace\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+403752636.index
+3888649455.index
+2803902654.index
+2406762315.index
+4185354590.index
+3521770928.index
+3242814326.index
+3141523005.index
+240879112.index
+992827798.index
+3007064470.index
+3160839030.index
+2120030963.index
+265266979.index
+2741263938.index

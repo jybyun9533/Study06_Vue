@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<style type="text/css">
+#title>h2{
+	width:80%;
+	height:30px;
+	margin :auto;
+	padding:20px;
+	text-align:center;
+	color : blue;
+}
+
+#sub{
+	width:80%;
+	height:30px;
+	margin :auto;
+	padding:20px;
+	text-align:center;
+	font-size : 30px;
+	font: italic 1.5em/1em Georgia, serif ;
+}
+
+#app{
+	width:80%;
+	height:30px;
+	margin :auto;
+	padding:20px;
+	text-align:center;
+}
+#result{
+	color : red;
+}
+
+</style>
+</head>
+<body>
+	<div id="title">
+		<h2>ENCORE INFORMATION</h2>
+	</div>
+	<hr>
+	<div id="sub">
+		Sign Up Form
+	</div>
+	
+	<div id="app">
+		<form id="frm" method="post" action="vue09_event_prevent.html">
+			<label><span>아이디</span></label>
+			<input type="text" id="id" v-model="id"><br>
+			
+			<label><span>패스워드</span></label> 
+			<input type="password" id="pw" v-model="pw"><br>
+			
+			<label><span>이름</span></label> 
+			<input type="text" id="name" v-model="name"><br>
+			
+			<label><span>주소</span></label> 
+			<input type="text" id="addr" v-model="addr"><br>
+			
+			<label><span>전화번호</span></label> 
+			<input type="text" id="num" v-model="num"><br>
+			
+			<input type='submit' @click="check" value="사원추가"> 
+			<label><input @keyup.enter="submit">키엔터</label>
+		</form>
+		<br><br>
+		
+		<div id="result">
+			<fieldset>
+				<span v-html="id"></span>
+				<span v-html="pw"></span>
+				<span v-html="name"></span>
+				<span v-html="addr"></span>
+				<span v-html="num"></span>
+			</fieldset>
+		</div>
+	</div>
+	
+	<script>
+		new Vue({
+			el:"#app",
+			data:{
+				id:'',
+				pw:'',
+				name:'',
+				addr:'',
+				num:''
+			},
+			methods:{
+				check(){
+					if(this.id==''||this.id==null){
+						alert('아이디를 입력하시오')
+						event.preventDefault();
+					}
+					if(this.pw==''||this.pw==null){
+						alert('패스워드를 입력하시오')
+						event.preventDefault();
+					}
+					
+					//event.preventDefault();
+				}
+				
+			}
+		});
+	</script>
+</body>
+</html>

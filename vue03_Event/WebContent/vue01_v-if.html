@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+	<div id="app">
+		<div v-html="title"></div>
+		<input v-model="grade">
+		<div v-if="grade=='A'"><h3>v-if 실행 :: A Grade</h3></div>
+		<div v-else-if="grade=='B'"><h3>v-else-if 실행 :: B Grade</h3></div>
+		<div v-else><h3>v-else 실행 :: Try Agian</h3></div>
+	</div>
+	
+	<script>
+		var model = {
+			title : 'ENCORE',
+			grade : 'A'
+		}
+		
+		var app = new Vue({
+			el:'#app',
+			data:model
+		});
+	</script>
+</body>
+</html>
